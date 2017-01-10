@@ -83,9 +83,9 @@
 		
 		editorUi.actions.get('print').funct = function()
 		{
-			editorUi.showDialog(new PrintDialog(editorUi).container, 320,
+			editorUi.showDialog(new PrintDialog(editorUi).container, 360,
 				(editorUi.pages != null && editorUi.pages.length > 1) ?
-				400 : 340, true, true);
+				420 : 360, true, true);
 		};
 		
 		editorUi.actions.addAction('open...', function()
@@ -303,7 +303,8 @@
 		var copiedStyles = ['rounded', 'shadow', 'dashed', 'dashPattern', 'fontFamily', 'fontSize', 'fontColor', 'fontStyle', 'align',
 		                    'verticalAlign', 'strokeColor', 'strokeWidth', 'fillColor', 'gradientColor', 'swimlaneFillColor',
 		                    'textOpacity', 'gradientDirection', 'glass', 'labelBackgroundColor', 'labelBorderColor', 'opacity',
-		                    'spacing', 'spacingTop', 'spacingLeft', 'spacingBottom', 'spacingRight'];
+		                    'spacing', 'spacingTop', 'spacingLeft', 'spacingBottom', 'spacingRight', 'endFill', 'endArrow',
+		                    'endSize', 'startStill', 'startArrow', 'startSize'];
 		
 		editorUi.actions.addAction('copyStyle', function()
 		{
@@ -333,8 +334,6 @@
 			 			}
 			 		}
 				}
-				
-				editorUi.copiedEdgeStyle = null;
 			}
 		}, null, null, 'Ctrl+Shift+C');
 
@@ -442,6 +441,54 @@
 			window.open('https://www.youtube.com/watch?v=8OaMWa4R1SE&t=1');
 		});
 		
+		action = editorUi.actions.addAction('tags...', mxUtils.bind(this, function()
+		{
+			if (this.tagsWindow == null)
+			{
+				this.tagsWindow = new TagsWindow(editorUi, document.body.offsetWidth - 380, 230, 280, 120);
+				this.tagsWindow.window.addListener('show', function()
+				{
+					editorUi.fireEvent(new mxEventObject('tags'));
+				});
+				this.tagsWindow.window.addListener('hide', function()
+				{
+					editorUi.fireEvent(new mxEventObject('tags'));
+				});
+				this.tagsWindow.window.setVisible(true);
+				editorUi.fireEvent(new mxEventObject('tags'));
+			}
+			else
+			{
+				this.tagsWindow.window.setVisible(!this.tagsWindow.window.isVisible());
+			}
+		}));
+		action.setToggleAction(true);
+		action.setSelectedCallback(mxUtils.bind(this, function() { return this.tagsWindow != null && this.tagsWindow.window.isVisible(); }));
+		
+		action = editorUi.actions.addAction('find...', mxUtils.bind(this, function()
+		{
+			if (this.findWindow == null)
+			{
+				this.findWindow = new FindWindow(editorUi, document.body.offsetWidth - 300, 110, 204, 116);
+				this.findWindow.window.addListener('show', function()
+				{
+					editorUi.fireEvent(new mxEventObject('find'));
+				});
+				this.findWindow.window.addListener('hide', function()
+				{
+					editorUi.fireEvent(new mxEventObject('find'));
+				});
+				this.findWindow.window.setVisible(true);
+				editorUi.fireEvent(new mxEventObject('find'));
+			}
+			else
+			{
+				this.findWindow.window.setVisible(!this.findWindow.window.isVisible());
+			}
+		}));
+		action.setToggleAction(true);
+		action.setSelectedCallback(mxUtils.bind(this, function() { return this.findWindow != null && this.findWindow.window.isVisible(); }));
+
 		// Adds language menu to options only if localStorage is available for
 		// storing the choice. We do not want to use cookies for older browsers.
 		// Note that the URL param lang=XX is available for setting the language
@@ -1654,6 +1701,8 @@
 			}
 		}, null, null, 'Ctrl+Shift+X').isEnabled = isGraphEnabled;
 		
+		
+		
 		editorUi.actions.addAction('insertRectangle', function()
 		{
 			if (graph.isEnabled() && !graph.isCellLocked(graph.getDefaultParent()))
@@ -1691,7 +1740,7 @@
 				}
 				else
 				{
-					addInsertItem(menu, parent, mxResources.get(methods[i]), methods[i]);
+					addInsertItem(menu, parent, mxResources.get(methods[i]) + '...', methods[i]);
 				}
 			}
 		})));
@@ -2005,6 +2054,15 @@
 			}
 		}));
 		
+		// Overrides edit menu to add find
+		this.put('edit', new Menu(mxUtils.bind(this, function(menu, parent)
+		{
+			this.addMenuItems(menu, ['undo', 'redo', '-', 'cut', 'copy', 'paste', 'delete', '-', 'duplicate', '-',
+									 'find', '-',
+			                         'editData', 'editTooltip', 'editStyle', '-', 'edit', '-', 'editLink', 'openLink', '-',
+			                         'selectVertices', 'selectEdges', 'selectAll', 'selectNone', '-', 'lockUnlock']);
+		})));
+		
 		// Overrides view menu to add search and scratchpad
 		this.put('view', new Menu(mxUtils.bind(this, function(menu, parent)
 		{
@@ -2018,7 +2076,7 @@
 				
 				if (!editorUi.isOffline() || mxClient.IS_CHROMEAPP)
 				{
-					this.addLinkToItem(item, 'https://support.draw.io/questions/10420280');
+					this.addLinkToItem(item, 'https://desk.draw.io/solution/articles/16000042367-how-to-use-the-scratchpad-');
 				}
 			}
 			
@@ -2062,7 +2120,16 @@
 
 			if (!editorUi.isOfflineApp() && urlParams['embed'] != '1')
 			{
-				this.addMenuItems(menu, ['plugins', '-', 'offline'], parent);
+				this.addMenuItems(menu, ['plugins', '-'], parent);
+				
+				var item = this.addMenuItem(menu, 'tags', parent);
+				
+				if (!editorUi.isOffline() || mxClient.IS_CHROMEAPP)
+				{
+					this.addLinkToItem(item, 'https://desk.draw.io/solution/articles/16000046966-how-to-use-tags');
+				}
+				
+				this.addMenuItems(menu, ['-', 'offline'], parent);
 			}
 			else
 			{

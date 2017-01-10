@@ -849,8 +849,8 @@ var EmbedHtmlDialog = function(editorUi)
 	editCheckBox.setAttribute('checked', 'checked');
 	editCheckBox.defaultChecked = true;
 	editCheckBox.style.marginLeft = '10px';
-	//options.appendChild(editCheckBox);
-	//mxUtils.write(options, mxResources.get('edit'));
+	options.appendChild(editCheckBox);
+	mxUtils.write(options, mxResources.get('edit'));
 
 	var layersCheckBox = document.createElement('input');
 	layersCheckBox.setAttribute('type', 'checkbox');
@@ -1021,7 +1021,7 @@ var EmbedHtmlDialog = function(editorUi)
 	{
 		var helpBtn = mxUtils.button(mxResources.get('help'), function()
 		{
-			window.open('https://support.draw.io/pages/viewpage.action?pageId=12878123');
+			window.open('https://desk.draw.io/solution/articles/16000042542-how-to-embed-html-');
 		});
 		
 		helpBtn.className = 'geBtn';	
@@ -1171,7 +1171,7 @@ var EmbedSvgDialog = function(editorUi, isImage)
 
 	var shadowCheckBox = document.createElement('input');
 	shadowCheckBox.setAttribute('type', 'checkbox');
-	shadowCheckBox.style.marginLeft = '30px';
+	shadowCheckBox.style.marginLeft = '10px';
 	
 	if (graph.shadowVisible)
 	{
@@ -1187,7 +1187,7 @@ var EmbedSvgDialog = function(editorUi, isImage)
 	
 	var imageCheckBox = document.createElement('input');
 	imageCheckBox.setAttribute('type', 'checkbox');
-	imageCheckBox.style.marginLeft = '30px';
+	imageCheckBox.style.marginLeft = '10px';
 	
 	if (!isImage)
 	{
@@ -1197,7 +1197,7 @@ var EmbedSvgDialog = function(editorUi, isImage)
 	
 	var retinaCheckBox = document.createElement('input');
 	retinaCheckBox.setAttribute('type', 'checkbox');
-	retinaCheckBox.style.marginLeft = '30px';
+	retinaCheckBox.style.marginLeft = '10px';
 	
 	if (isImage)
 	{
@@ -1209,13 +1209,21 @@ var EmbedSvgDialog = function(editorUi, isImage)
 	lightboxCheckBox.setAttribute('type', 'checkbox');
 	lightboxCheckBox.setAttribute('checked', 'checked');
 	lightboxCheckBox.defaultChecked = true;
-	lightboxCheckBox.style.marginLeft = '30px';
+	lightboxCheckBox.style.marginLeft = '10px';
 	options.appendChild(lightboxCheckBox);
 	mxUtils.write(options, mxResources.get('lightbox'));
 	
+	var editCheckBox = document.createElement('input');
+	editCheckBox.setAttribute('type', 'checkbox');
+	editCheckBox.setAttribute('checked', 'checked');
+	editCheckBox.defaultChecked = true;
+	editCheckBox.style.marginLeft = '10px';
+	options.appendChild(editCheckBox);
+	mxUtils.write(options, mxResources.get('edit'));
+
 	var layersCheckBox = document.createElement('input');
 	layersCheckBox.setAttribute('type', 'checkbox');
-	layersCheckBox.style.marginLeft = '30px';
+	layersCheckBox.style.marginLeft = '10px';
 	
 	var model = editorUi.editor.graph.getModel();
 	
@@ -1250,7 +1258,8 @@ var EmbedSvgDialog = function(editorUi, isImage)
 				{
 					// KNOWN: Message passing does not seem to work in IE11
 					onclick = " onclick=\"(function(img){if(img.wnd!=null&&!img.wnd.closed){img.wnd.focus();}else{var r=function(evt){if(evt.data=='ready'&&evt.source==img.wnd){img.wnd.postMessage(decodeURIComponent(" +
-						"img.getAttribute('src')),'*');window.removeEventListener('message',r);}};window.addEventListener('message',r);img.wnd=window.open('https://www.draw.io/?client=1&lightbox=1&chrome=0&edit=_blank" +
+						"img.getAttribute('src')),'*');window.removeEventListener('message',r);}};window.addEventListener('message',r);img.wnd=window.open('https://www.draw.io/?client=1&lightbox=1&chrome=0" +
+						((editCheckBox.checked) ? "&edit=_blank" : "") +
 						((layersCheckBox.checked) ? '&layers=1' : '') + "');}})(this);\"";
 					css += 'cursor:pointer;';
 				}
@@ -1388,7 +1397,8 @@ var EmbedSvgDialog = function(editorUi, isImage)
 				{
 					// KNOWN: Message passing does not seem to work in IE11
 					onclick = "onclick=\"(function(img){if(img.wnd!=null&&!img.wnd.closed){img.wnd.focus();}else{var r=function(evt){if(evt.data=='ready'&&evt.source==img.wnd){img.wnd.postMessage(decodeURIComponent(" +
-						"img.getAttribute('src')),'*');window.removeEventListener('message',r);}};window.addEventListener('message',r);img.wnd=window.open('https://www.draw.io/?client=1&lightbox=1&chrome=0&edit=_blank" +
+						"img.getAttribute('src')),'*');window.removeEventListener('message',r);}};window.addEventListener('message',r);img.wnd=window.open('https://www.draw.io/?client=1&lightbox=1&chrome=0" +
+						((editCheckBox.checked) ? "&edit=_blank" : "") +
 						((layersCheckBox.checked) ? '&layers=1' : '') + "');}})(this);\"";
 					css += 'cursor:pointer;';
 				}
@@ -1423,7 +1433,8 @@ var EmbedSvgDialog = function(editorUi, isImage)
 						"svg.getAttribute('content')),'*');window.removeEventListener('message',r);}};" +
 						"window.addEventListener('message',r);" +
 						// Opens lightbox window
-						"svg.wnd=window.open('https://www.draw.io/?client=1&lightbox=1&chrome=0&edit=_blank" +
+						"svg.wnd=window.open('https://www.draw.io/?client=1&lightbox=1&chrome=0" +
+						((editCheckBox.checked) ? "&edit=_blank" : "") +
 						((layersCheckBox.checked) ? '&layers=1' : '') + "');}}})(this);";
 					svgRoot.setAttribute('onclick', js);
 					css += 'cursor:pointer;';
@@ -1470,6 +1481,7 @@ var EmbedSvgDialog = function(editorUi, isImage)
 	mxEvent.addListener(shadowCheckBox, 'change', update);
 	mxEvent.addListener(fitCheckBox, 'change', update);
 	mxEvent.addListener(lightboxCheckBox, 'change', update);
+	mxEvent.addListener(editCheckBox, 'change', update);
 	mxEvent.addListener(layersCheckBox, 'change', update);
 	
 	var buttons = document.createElement('div');
@@ -1480,7 +1492,7 @@ var EmbedSvgDialog = function(editorUi, isImage)
 	{
 		var helpBtn = mxUtils.button(mxResources.get('help'), function()
 		{
-			window.open('https://support.draw.io/pages/viewpage.action?pageId=12222606');
+			window.open('https://desk.draw.io/solution/articles/16000042548-how-to-embed-svg-');
 		});
 		
 		helpBtn.className = 'geBtn';	
@@ -2707,7 +2719,8 @@ var BackgroundImageDialog = function(editorUi, applyFn)
 	
 	if (!editorUi.isOffline())
 	{
-		if (typeof(google) != 'undefined' && typeof(google.picker) != 'undefined')
+		// Dialogs not allowed inside iframes
+		if (typeof(google) != 'undefined' && typeof(google.picker) != 'undefined' && window.self === window.top)
 		{
 			var searchBtn = mxUtils.button(mxResources.get('search'), function()
 			{
@@ -2795,11 +2808,137 @@ var BackgroundImageDialog = function(editorUi, applyFn)
  */
 var ParseDialog = function(editorUi, title)
 {
-	function parse(text, asList)
+	function parse(text, type)
 	{
 		var lines = text.split('\n');
 		
-		if (asList)
+		if (type == 'plantUmlPng' || type == 'plantUmlSvg')
+		{
+			var plantUmlServerUrl = (type == 'plantUmlPng') ? 'https://exp.draw.io/plantuml2/png/' :
+				'https://exp.draw.io/plantuml2/svg/';
+	    	var graph = editorUi.editor.graph;
+	    	
+	    	// TODO: Change server to return base64 & accept POST request
+	    	if (editorUi.spinner.spin(document.body, mxResources.get('inserting')))
+	    	{
+		    	function encode64(data) {
+					r = "";
+					for (i=0; i<data.length; i+=3) {
+				 		if (i+2==data.length) {
+							r +=append3bytes(data.charCodeAt(i), data.charCodeAt(i+1), 0);
+						} else if (i+1==data.length) {
+							r += append3bytes(data.charCodeAt(i), 0, 0);
+						} else {
+							r += append3bytes(data.charCodeAt(i), data.charCodeAt(i+1),
+								data.charCodeAt(i+2));
+						}
+					}
+					return r;
+				}
+				
+				function append3bytes(b1, b2, b3) {
+					c1 = b1 >> 2;
+					c2 = ((b1 & 0x3) << 4) | (b2 >> 4);
+					c3 = ((b2 & 0xF) << 2) | (b3 >> 6);
+					c4 = b3 & 0x3F;
+					r = "";
+					r += encode6bit(c1 & 0x3F);
+					r += encode6bit(c2 & 0x3F);
+					r += encode6bit(c3 & 0x3F);
+					r += encode6bit(c4 & 0x3F);
+					return r;
+				}
+				
+				function encode6bit(b) {
+					if (b < 10) {
+				 		return String.fromCharCode(48 + b);
+					}
+					b -= 10;
+					if (b < 26) {
+				 		return String.fromCharCode(65 + b);
+					}
+					b -= 26;
+					if (b < 26) {
+				 		return String.fromCharCode(97 + b);
+					}
+					b -= 26;
+					if (b == 0) {
+				 		return '-';
+					}
+					if (b == 1) {
+				 		return '_';
+					}
+					return '?';
+				}
+			
+				// TODO: Remove unescape, use btoa for compatibility with graph.compress
+				function compress(s) 
+				{
+				  return encode64(graph.bytesToString(pako.deflateRaw(unescape(encodeURIComponent(s)))));
+				}
+			
+				var xhr = new XMLHttpRequest();
+				xhr.open('GET', plantUmlServerUrl + compress(text), true);
+				xhr.responseType = 'blob';
+				
+				xhr.onload = function(e) 
+				{
+				  if (this.status >= 200 && this.status < 300)
+				  {
+				    var reader = new FileReader();
+				    reader.readAsDataURL(this.response); 
+				    reader.onload = function(e) 
+				    {
+				    	var img = new Image();
+				    	img.onload = function()
+				    	{
+				    		editorUi.spinner.stop();
+				    		
+				    		graph.getModel().beginUpdate();
+							try
+							{
+								var view = graph.view;
+								var bds = graph.getGraphBounds();
+								
+								// Computes unscaled, untranslated graph bounds
+								var x = Math.ceil(Math.max(0, bds.x / view.scale - view.translate.x) + 4 * graph.gridSize);
+								var y = Math.ceil(Math.max(0, (bds.y + bds.height) / view.scale - view.translate.y) + 4 * graph.gridSize);
+
+					    		cell = graph.insertVertex(null, null, text, graph.snap(x), graph.snap(y),
+									img.width, img.height, 'shape=image;noLabel=1;verticalAlign=top;aspect=fixed;imageAspect=0;' +
+									'image=' + editorUi.convertDataUri(e.target.result) + ';');
+							}
+							finally
+							{
+								graph.getModel().endUpdate();
+							}
+							
+							graph.setSelectionCell(cell);
+				           	graph.scrollCellToVisible(graph.getSelectionCell());
+				    	};
+				    	img.src = e.target.result;
+				    };
+				    reader.onerror = function(e)
+				    {
+				    	editorUi.handleError(e);
+				    };
+				  }
+				  else 
+				  {
+					  editorUi.spinner.stop();
+					  editorUi.handleError(e);
+				  }
+				};
+				
+				xhr.onerror = function(e)
+				{
+					editorUi.handleError(e);
+				};
+				 
+				xhr.send();
+	    	}
+		}
+		else if (type == 'list')
 		{
 			if (lines.length > 0)
 			{
@@ -2956,19 +3095,44 @@ var ParseDialog = function(editorUi, title)
 	textarea.style.width = '100%';
 	textarea.style.height = '354px';
 	textarea.style.marginBottom = '16px';
-		
-	var diagramCheckBox = document.createElement('input');
-	diagramCheckBox.setAttribute('type', 'checkbox');
 	
+	var typeSelect = document.createElement('select');
+
+	var listOption = document.createElement('option');
+	listOption.setAttribute('value', 'list');
+	listOption.setAttribute('selected', 'selected');
+	mxUtils.write(listOption, mxResources.get('list'));
+	typeSelect.appendChild(listOption);
+	
+	var diagramOption = document.createElement('option');
+	diagramOption.setAttribute('value', 'diagram');
+	mxUtils.write(diagramOption, mxResources.get('diagram'));
+	typeSelect.appendChild(diagramOption);
+		
+	var plantUmlSvgOption = document.createElement('option');
+	plantUmlSvgOption.setAttribute('value', 'plantUmlSvg');
+	mxUtils.write(plantUmlSvgOption, mxResources.get('plantUml') + ' (' + mxResources.get('formatSvg') + ')');
+	
+	var plantUmlPngOption = document.createElement('option');
+	plantUmlPngOption.setAttribute('value', 'plantUmlPng');
+	mxUtils.write(plantUmlPngOption, mxResources.get('plantUml') + ' (' + mxResources.get('formatPng') + ')');
+	
+	if (Graph.fileSupport && !editorUi.isOffline())
+	{
+		typeSelect.appendChild(plantUmlSvgOption);
+		typeSelect.appendChild(plantUmlPngOption);
+	}
+
 	function getDefaultValue()
 	{
-		return  (!diagramCheckBox.checked) ?
+		return  (typeSelect.value == 'list') ?
 			'Person\n-name: String\n-birthDate: Date\n--\n+getName(): String\n+setName(String): void\n+isBirthday(): boolean' :
-			';Example:\na->b\nb->c\nc->a\n';
+			((typeSelect.value == 'plantUmlPng') ? '@startuml\nskinparam backgroundcolor transparent\nskinparam shadowing false\nAlice -> Bob: Authentication Request\nBob --> Alice: Authentication Response\n\nAlice -> Bob: Another authentication Request\nAlice <-- Bob: another authentication Response\n@enduml' :
+			((typeSelect.value == 'plantUmlSvg') ? '@startuml\nskinparam shadowing false\nAlice -> Bob: Authentication Request\nBob --> Alice: Authentication Response\n\nAlice -> Bob: Another authentication Request\nAlice <-- Bob: another authentication Response\n@enduml' :
+			';Example:\na->b\nb->c\nc->a\n'));
 	};
 	
 	var defaultValue = getDefaultValue();
-
 	textarea.value = defaultValue;
 	div.appendChild(textarea);
 	
@@ -3006,9 +3170,9 @@ var ParseDialog = function(editorUi, title)
 		textarea.addEventListener('drop', handleDrop, false);
 	}
 
-	div.appendChild(diagramCheckBox);
+	div.appendChild(typeSelect);
 	
-	mxEvent.addListener(diagramCheckBox, 'change', function()
+	mxEvent.addListener(typeSelect, 'change', function()
 	{
 		var newDefaultValue = getDefaultValue();
 		
@@ -3018,11 +3182,6 @@ var ParseDialog = function(editorUi, title)
 			textarea.value = defaultValue;
 		}
 	});
-	
-	var span = document.createElement('span');
-	mxUtils.write(span, ' ' + mxResources.get('diagram'));
-	span.style.marginRight = '10px';
-	div.appendChild(span);
 	
 	var cancelBtn = mxUtils.button(mxResources.get('close'), function()
 	{
@@ -3049,7 +3208,7 @@ var ParseDialog = function(editorUi, title)
 	var okBtn = mxUtils.button(mxResources.get('insert'), function()
 	{
 		editorUi.hideDialog();
-		parse(textarea.value, !diagramCheckBox.checked);
+		parse(textarea.value, typeSelect.value);
 	});
 	div.appendChild(okBtn);
 	
@@ -3688,44 +3847,47 @@ var CreateDialog = function(editorUi, title, createFn, cancelFn, dlgTitle, btnLa
 	var serviceSelect = document.createElement('select');
 	serviceSelect.style.marginLeft = '10px';
 
-	if (typeof window.DriveClient === 'function')
+	if (!editorUi.isOfflineApp() && !editorUi.isOffline())
 	{
-		var googleOption = document.createElement('option');
-		googleOption.setAttribute('value', App.MODE_GOOGLE);
-		mxUtils.write(googleOption, mxResources.get('googleDrive'));
-		serviceSelect.appendChild(googleOption);
-		
-		addLogo(IMAGE_PATH + '/google-drive-logo.svg', mxResources.get('googleDrive'), App.MODE_GOOGLE, 'drive');
-	}
-
-	if (typeof window.DropboxClient === 'function')
-	{
-		var dropboxOption = document.createElement('option');
-		dropboxOption.setAttribute('value', App.MODE_DROPBOX);
-		mxUtils.write(dropboxOption, mxResources.get('dropbox'));
-		serviceSelect.appendChild(dropboxOption);
-		
-		if (editorUi.mode == App.MODE_DROPBOX)
+		if (typeof window.DriveClient === 'function')
 		{
-			dropboxOption.setAttribute('selected', 'selected');
+			var googleOption = document.createElement('option');
+			googleOption.setAttribute('value', App.MODE_GOOGLE);
+			mxUtils.write(googleOption, mxResources.get('googleDrive'));
+			serviceSelect.appendChild(googleOption);
+			
+			addLogo(IMAGE_PATH + '/google-drive-logo.svg', mxResources.get('googleDrive'), App.MODE_GOOGLE, 'drive');
 		}
-		
-		addLogo(IMAGE_PATH + '/dropbox-logo.svg', mxResources.get('dropbox'), App.MODE_DROPBOX, 'dropbox');
-	}
-
-	if (typeof window.OneDriveClient === 'function')
-	{
-		var oneDriveOption = document.createElement('option');
-		oneDriveOption.setAttribute('value', App.MODE_ONEDRIVE);
-		mxUtils.write(oneDriveOption, mxResources.get('oneDrive'));
-		serviceSelect.appendChild(oneDriveOption);
-		
-		if (editorUi.mode == App.MODE_ONEDRIVE)
+	
+		if (typeof window.DropboxClient === 'function')
 		{
-			oneDriveOption.setAttribute('selected', 'selected');
+			var dropboxOption = document.createElement('option');
+			dropboxOption.setAttribute('value', App.MODE_DROPBOX);
+			mxUtils.write(dropboxOption, mxResources.get('dropbox'));
+			serviceSelect.appendChild(dropboxOption);
+			
+			if (editorUi.mode == App.MODE_DROPBOX)
+			{
+				dropboxOption.setAttribute('selected', 'selected');
+			}
+			
+			addLogo(IMAGE_PATH + '/dropbox-logo.svg', mxResources.get('dropbox'), App.MODE_DROPBOX, 'dropbox');
 		}
-		
-		addLogo(IMAGE_PATH + '/onedrive-logo.svg', mxResources.get('oneDrive'), App.MODE_ONEDRIVE, 'oneDrive');
+	
+		if (typeof window.OneDriveClient === 'function')
+		{
+			var oneDriveOption = document.createElement('option');
+			oneDriveOption.setAttribute('value', App.MODE_ONEDRIVE);
+			mxUtils.write(oneDriveOption, mxResources.get('oneDrive'));
+			serviceSelect.appendChild(oneDriveOption);
+			
+			if (editorUi.mode == App.MODE_ONEDRIVE)
+			{
+				oneDriveOption.setAttribute('selected', 'selected');
+			}
+			
+			addLogo(IMAGE_PATH + '/onedrive-logo.svg', mxResources.get('oneDrive'), App.MODE_ONEDRIVE, 'oneDrive');
+		}
 	}
 	
 	if (!Editor.useLocalStorage || urlParams['storage'] == 'device' ||
@@ -4214,48 +4376,48 @@ var ImageDialog = function(editorUi, title, initialValue, fn, ignoreExisting, co
         linkInput.focus();
 	};
 
-	if (typeof(google) != 'undefined' && typeof(google.picker) != 'undefined')
+	if (Graph.fileSupport)
 	{
-		if (Graph.fileSupport)
-		{
-			var fileInput = document.createElement('input');
-			fileInput.setAttribute('multiple', 'multiple');
-			fileInput.setAttribute('type', 'file');
-			
-			if (document.documentMode == null)
-			{
-				mxEvent.addListener(fileInput, 'change', function(evt)
-				{
-			    	editorUi.importFiles(fileInput.files, 0, 0, editorUi.maxImageSize, function(data, mimeType, x, y, w, h)
-			    	{
-			    		apply(data);
-			    	}, function()
-			    	{
-			    		// No post processing
-			    	}, function(file)
-			    	{
-			    		// Handles only images
-			    		return file.type.substring(0, 6) == 'image/';
-			    	}, function(queue)
-			    	{
-			    		// Invokes elements of queue in order
-			    		for (var i = 0; i < queue.length; i++)
-			    		{
-			    			queue[i]();
-			    		}
-			    	}, true);
-				});
-				
-				var btn = mxUtils.button(mxResources.get('open'), function()
-				{
-					fileInput.click();
-				});
-				btn.className = 'geBtn';
-				
-				btns.appendChild(btn);
-			}
-		}
+		var fileInput = document.createElement('input');
+		fileInput.setAttribute('multiple', 'multiple');
+		fileInput.setAttribute('type', 'file');
 		
+		if (document.documentMode == null)
+		{
+			mxEvent.addListener(fileInput, 'change', function(evt)
+			{
+		    	editorUi.importFiles(fileInput.files, 0, 0, editorUi.maxImageSize, function(data, mimeType, x, y, w, h)
+		    	{
+		    		apply(data);
+		    	}, function()
+		    	{
+		    		// No post processing
+		    	}, function(file)
+		    	{
+		    		// Handles only images
+		    		return file.type.substring(0, 6) == 'image/';
+		    	}, function(queue)
+		    	{
+		    		// Invokes elements of queue in order
+		    		for (var i = 0; i < queue.length; i++)
+		    		{
+		    			queue[i]();
+		    		}
+		    	}, true);
+			});
+			
+			var btn = mxUtils.button(mxResources.get('open'), function()
+			{
+				fileInput.click();
+			});
+			btn.className = 'geBtn';
+			
+			btns.appendChild(btn);
+		}
+	}
+
+	if (typeof(google) != 'undefined' && typeof(google.picker) != 'undefined' && window.self === window.top)
+	{
 		var searchBtn = mxUtils.button(mxResources.get('search'), function()
 		{
 			// Creates one picker and reuses it to avoid polluting the DOM
@@ -4602,7 +4764,7 @@ PrintDialog.prototype.create = function(editorUi)
 	
 	// Buttons
 	var buttons = document.createElement('div');
-	buttons.style.cssText = 'text-align:right;margin:42px 0 0 0;';
+	buttons.style.cssText = 'text-align:right;margin:62px 0 0 0;';
 	
 	// Overall scale for print-out to account for print borders in dialogs etc
 	function preview(print)
@@ -4870,6 +5032,17 @@ PrintDialog.prototype.create = function(editorUi)
 		buttons.appendChild(cancelBtn);
 	}
 	
+	if (!editorUi.isOffline())
+	{
+		var helpBtn = mxUtils.button(mxResources.get('help'), function()
+		{
+			window.open('https://desk.draw.io/solution/articles/16000048947-how-to-print-');
+		});
+		
+		helpBtn.className = 'geBtn';
+		buttons.appendChild(helpBtn);
+	}
+	
 	if (!mxClient.IS_CHROMEAPP)
 	{
 		var previewBtn = mxUtils.button(mxResources.get('preview'), function()
@@ -5078,7 +5251,7 @@ var LinkDialog = function(editorUi, initialValue, btnLabel, fn)
 		linkInput.focus();
 	};
 
-	if (typeof(google) != 'undefined' && typeof(google.picker) != 'undefined')
+	if (typeof(google) != 'undefined' && typeof(google.picker) != 'undefined' && editorUi.drive != null)
 	{
 		var gpBtn = mxUtils.button(mxResources.get('googlePlus'), function()
 		{
@@ -5713,8 +5886,8 @@ var RevisionDialog = function(editorUi, revs)
 	
 	var currentElt = null;
 	
-	if (file == null || (editorUi.drive == null && file.constructor == DriveFile) ||
-		(editorUi.dropbox == null && file.constructor == DropboxFile))
+	if (file == null || (editorUi.drive == null && file.constructor == window.DriveFile) ||
+		(editorUi.dropbox == null && file.constructor == window.DropboxFile))
 	{
 		container.style.display = 'none';
 		tb.style.display = 'none';
@@ -6319,6 +6492,388 @@ var DraftDialog = function(editorUi, title, xml, editFn, discardFn, editLabel, d
 	div.appendChild(tb);
 
 	this.container = div;
+};
+
+/**
+ * 
+ */
+var FindWindow = function(ui, x, y, w, h)
+{
+	var action = ui.actions.get('find');
+	var graph = ui.editor.graph;
+	var lastSearch = null;
+	var lastFound = null;
+
+	var div = document.createElement('div');
+	div.style.userSelect = 'none';
+	div.style.overflow = 'hidden';
+	div.style.padding = '10px';
+	div.style.height = '100%';
+
+	var searchInput = document.createElement('input');
+	searchInput.setAttribute('placeholder', mxResources.get('find'));
+	searchInput.setAttribute('type', 'text');
+	searchInput.style.marginTop = '4px';
+	searchInput.style.width = '170px';
+	searchInput.style.fontSize = '12px';
+	searchInput.style.borderRadius = '4px';
+	searchInput.style.padding = '6px';
+	div.appendChild(searchInput);
+
+	var tmp = document.createElement('div');
+	
+	function testMeta(re, cell)
+	{
+		if (typeof cell.value === 'object' && cell.value.attributes != null)
+		{
+			var attrs = cell.value.attributes;
+			
+			for (var i = 0; i < attrs.length; i++)
+			{
+				if (attrs[i].nodeName != 'label' && re.test(attrs[i].nodeValue.toLowerCase()))
+				{
+					return true;
+				}	
+			}
+		}
+		
+		return false;
+	};
+	
+	function search()
+	{
+		var cells = graph.model.getDescendants(graph.model.getRoot());
+		var search = searchInput.value.toLowerCase();
+		var re = new RegExp(search);
+		var firstMatch = null;
+		
+		if (lastSearch != search)
+		{
+			lastSearch = search;
+			lastFound = null;
+		}
+
+		var active = lastFound == null;
+		
+		if (graph.isEnabled() && search.length > 0)
+		{
+			for (var i = 0; i < cells.length; i++)
+			{
+				var state = graph.view.getState(cells[i]);
+				
+				if (state != null && state.cell.value != null && (active || firstMatch == null) &&
+					(graph.model.isVertex(state.cell) || graph.model.isEdge(state.cell)))
+				{
+					if (graph.isHtmlLabel(state.cell))
+					{
+						tmp.innerHTML = graph.getLabel(state.cell);
+						label = mxUtils.extractTextWithWhitespace([tmp]);
+					}
+					else
+					{					
+						label = graph.getLabel(state.cell);
+					}
+		
+					label = mxUtils.trim(label.replace(/[\x00-\x1F\x7F-\x9F]|\s+/g, ' ')).toLowerCase();
+					
+					if (re.test(label) || testMeta(re, state.cell))
+					{
+						if (active)
+						{
+							firstMatch = state;
+						
+							break;
+						}
+						else if (firstMatch == null)
+						{
+							firstMatch = state;
+						}
+					}
+				}
+	
+				active = active || state == lastFound;
+			}
+		}
+					
+		if (firstMatch != null)
+		{
+			lastFound = firstMatch;
+			graph.setSelectionCell(lastFound.cell);
+			graph.scrollCellToVisible(lastFound.cell);
+		}
+		else
+		{
+			graph.clearSelection();
+		}
+		
+		return !graph.isEnabled() || search.length == 0 || firstMatch != null;
+	};
+
+	mxUtils.br(div);
+
+	var resetBtn = mxUtils.button(mxResources.get('reset'), function()
+	{
+		searchInput.value = '';
+		searchInput.style.backgroundColor = '';
+		lastFound = null;
+		lastSearch = null;
+		searchInput.focus();
+	});
+	
+	resetBtn.setAttribute('title', mxResources.get('reset'));
+	resetBtn.style.marginTop = '8px';
+	resetBtn.style.marginRight = '4px';
+	resetBtn.style.backgroundColor = '#f5f5f5';
+	resetBtn.style.backgroundImage = 'none';
+	resetBtn.className = 'geBtn';
+	
+	div.appendChild(resetBtn);
+
+	var btn = mxUtils.button(mxResources.get('find'), function()
+	{
+		searchInput.style.backgroundColor = search() ? '' : '#ffcfcf';
+	});
+	
+	btn.setAttribute('title', mxResources.get('find') + ' (Enter)');
+	btn.style.marginTop = '8px';
+	btn.style.backgroundColor = '#4d90fe';
+	btn.style.backgroundImage = 'none';
+	btn.className = 'geBtn gePrimaryBtn';
+	
+	div.appendChild(btn);
+	
+	mxEvent.addListener(searchInput, 'keyup', function(evt)
+	{
+		// Ctrl or Cmd keys
+		if (evt.keyCode == 91 || evt.keyCode == 17)
+		{
+			// Workaround for lost focus on show
+			mxEvent.consume(evt);
+		}
+		else if (evt.keyCode == 27)
+		{
+			action.funct();
+		}
+		else if (lastSearch != searchInput.value.toLowerCase() || evt.keyCode == 13)
+		{
+			searchInput.style.backgroundColor = search() ? '' : '#ffcfcf';
+		}
+	});
+
+	mxEvent.addListener(div, 'keydown', function(evt)
+	{
+		if (evt.keyCode == 70 && ui.keyHandler.isControlDown(evt) && !mxEvent.isShiftDown(evt))
+		{
+			action.funct();
+			mxEvent.consume(evt);
+		}
+	});
+
+	this.window = new mxWindow(mxResources.get('find'), div, x, y, w, h, true, true);
+	this.window.destroyOnClose = false;
+	this.window.setMaximizable(false);
+	this.window.setResizable(false);
+	this.window.setClosable(true);
+	
+	this.window.addListener('show', mxUtils.bind(this, function()
+	{
+		if (this.window.isVisible())
+		{
+			searchInput.focus();
+			
+			if (mxClient.IS_FF || document.documentMode >= 5 || mxClient.IS_QUIRKS)
+			{
+				searchInput.select();
+			}
+			else
+			{
+				document.execCommand('selectAll', false, null);
+			}
+		}
+		else
+		{
+			graph.container.focus();
+		}
+	}));
+};
+
+/**
+ * 
+ */
+var TagsWindow = function(editorUi, x, y, w, h)
+{
+	var graph = editorUi.editor.graph;
+	var propertyName = 'tags';
+
+	var div = document.createElement('div');
+	div.style.userSelect = 'none';
+	div.style.overflow = 'hidden';
+	div.style.padding = '10px';
+	div.style.height = '100%';
+	
+	var searchInput = document.createElement('input');
+	searchInput.setAttribute('placeholder', mxResources.get('allTags'));
+	searchInput.setAttribute('type', 'text');
+	searchInput.style.marginTop = '4px';
+	searchInput.style.width = '240px';
+	searchInput.style.fontSize = '12px';
+	searchInput.style.borderRadius = '4px';
+	searchInput.style.padding = '6px';
+	div.appendChild(searchInput);
+	
+	mxEvent.addListener(searchInput, 'dblclick', function()
+	{
+		var dlg = new FilenameDialog(editorUi, propertyName, mxResources.get('ok'), mxUtils.bind(this, function(name)
+		{
+			if (name != null && name.length > 0)
+			{
+				propertyName = name;
+			}
+		}), mxResources.get('enterPropertyName'));
+		editorUi.showDialog(dlg.container, 300, 80, true, true);
+		dlg.init();
+	});
+	
+	searchInput.setAttribute('title', mxResources.get('doubleClickChangeProperty'));
+
+	function searchCells(cells)
+	{
+		cells = (cells != null) ? cells : graph.model.getDescendants(graph.model.getRoot());
+		var tagList = searchInput.value.split(' ');
+		var result = [];
+		
+		for (var i = 0; i < cells.length; i++)
+		{
+			if (graph.model.isVertex(cells[i]) || graph.model.isEdge(cells[i]))
+			{
+				var tags = (cells[i].value != null && typeof(cells[i].value) == 'object') ?
+					mxUtils.trim(cells[i].value.getAttribute(propertyName) || '') : '';
+				var match = true;
+
+				if (tags.length > 0)
+				{
+					var tmp = tags.toLowerCase().split(' ');
+					
+					for (var j = 0; j < tagList.length && match; j++)
+					{
+						var tag = mxUtils.trim(tagList[j]).toLowerCase();
+						
+						match = match && (tag.length == 0 || mxUtils.indexOf(tmp, tag) >= 0);
+					}
+				}
+				else
+				{
+					match = mxUtils.trim(searchInput.value).length == 0;
+				}
+				
+				if (match)
+				{
+					result.push(cells[i]);
+				}
+			}
+		}
+		
+		return result;
+	};
+
+	function setCellsVisible(cells, visible)
+	{	
+		graph.model.beginUpdate();
+		try
+		{
+			for (var i = 0; i < cells.length; i++)
+			{
+				graph.model.setVisible(cells[i], visible);
+			}
+		}
+		finally
+		{
+			graph.model.endUpdate();
+		}
+	};
+	
+	mxUtils.br(div);
+
+	var hideBtn = mxUtils.button(mxResources.get('hide'), function()
+	{
+		setCellsVisible(searchCells(), false);
+	});
+	
+	hideBtn.setAttribute('title', mxResources.get('hide'));
+	hideBtn.style.marginTop = '8px';
+	hideBtn.style.marginRight = '4px';
+	hideBtn.style.backgroundColor = '#f5f5f5';
+	hideBtn.style.backgroundImage = 'none';
+	hideBtn.className = 'geBtn';
+	
+	div.appendChild(hideBtn);
+
+	var showBtn = mxUtils.button(mxResources.get('show'), function()
+	{
+		var cells = searchCells();
+		setCellsVisible(cells, true);
+		graph.setSelectionCells(cells);
+	});
+	
+	showBtn.setAttribute('title', mxResources.get('show'));
+	showBtn.style.marginTop = '8px';
+	showBtn.style.marginRight = '4px';
+	showBtn.style.backgroundColor = '#f5f5f5';
+	showBtn.style.backgroundImage = 'none';
+	showBtn.className = 'geBtn';
+	
+	div.appendChild(showBtn);
+	
+	var action = editorUi.actions.get('tags');
+
+	var btn = mxUtils.button(mxResources.get('close'), function()
+	{
+		action.funct();
+	});
+	
+	btn.setAttribute('title', mxResources.get('close') + ' (Enter/Esc)');
+	btn.style.marginTop = '8px';
+	btn.style.backgroundColor = '#4d90fe';
+	btn.style.backgroundImage = 'none';
+	btn.className = 'geBtn gePrimaryBtn';
+	
+	div.appendChild(btn);
+		
+	mxEvent.addListener(searchInput, 'keyup', function(evt)
+	{
+		// Ctrl or Cmd keys
+		if (evt.keyCode == 13 || evt.keyCode == 27)
+		{
+			action.funct();
+		}
+	});
+
+	this.window = new mxWindow(mxResources.get('tags'), div, x, y, w, h, true, true);
+	this.window.destroyOnClose = false;
+	this.window.setMaximizable(false);
+	this.window.setResizable(false);
+	this.window.setClosable(true);
+	
+	this.window.addListener('show', mxUtils.bind(this, function()
+	{
+		if (this.window.isVisible())
+		{
+			searchInput.focus();
+			
+			if (mxClient.IS_FF || document.documentMode >= 5 || mxClient.IS_QUIRKS)
+			{
+				searchInput.select();
+			}
+			else
+			{
+				document.execCommand('selectAll', false, null);
+			}
+		}
+		else
+		{
+			graph.container.focus();
+		}
+	}));
 };
 
 /**
@@ -8444,7 +8999,7 @@ var EditShapeDialog = function(editorUi, cell, title, w, h)
 			window.open('https://support.draw.io/display/DO/Editing+Shapes');
 		});
 		
-		helpBtn.className = 'geBtn';	
+		helpBtn.className = 'geBtn';
 		td.appendChild(helpBtn);
 	}
 	
